@@ -1,32 +1,58 @@
-function navTo(screenId, navEl = null) {
-    // প্রথমে সব স্ক্রিন লুকিয়ে ফেলা হচ্ছে
-    document.querySelectorAll('.screen').forEach(s => {
-        s.classList.add('hidden');
-    });
+function showToast(msg) { 
+    let c = document.getElementById('toast-container'); 
+    let t = document.createElement('div'); 
+    t.className='toast'; t.innerText=msg; 
+    c.appendChild(t); 
+    setTimeout(()=>t.remove(), 3000); 
+}
 
-    // এবার শুধু যেটিতে ক্লিক করা হয়েছে, সেটি দেখানো হচ্ছে
+function withLoading(cb) { 
+    document.getElementById('loader-overlay').classList.remove('hidden'); 
+    setTimeout(()=>{ 
+        document.getElementById('loader-overlay').classList.add('hidden'); 
+        cb(); 
+    }, 500); 
+}
+
+function navTo(screenId, navEl = null) {
+    // Hide all screens
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    
+    // Show targeted screen
     document.getElementById(screenId).classList.remove('hidden');
 
-    // নিচের মেনুর কালার চেঞ্জ করার লজিক
-    if (navEl) {
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        navEl.classList.add('active');
+    // Update bottom nav active state
+    if (navEl) { 
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
+        navEl.classList.add('active'); 
     }
     closeAllDropdowns();
 }
 
-// আপনার ui.js এর বাকি ফাংশনগুলো (showToast, toggleTheme ইত্যাদি) আগের মতই থাকবে...
-// 🌗 Theme Change Fixed
+function openModal(id) { document.getElementById(id).classList.remove('closed'); closeAllDropdowns(); }
+function closeModal(id) { document.getElementById(id).classList.add('closed'); }
+
+function toggleDropdown(id, e) { 
+    e.stopPropagation(); 
+    closeAllDropdowns(); 
+    document.getElementById(id).classList.add('show-dropdown'); 
+}
+function closeAllDropdowns() { 
+    document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show-dropdown')); 
+}
+
+document.body.addEventListener('click', closeAllDropdowns);
+
 function toggleTheme() {
     document.body.classList.toggle('dark-mode');
     if(currentUser) {
         currentUser.theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
         let users = DB.get('users');
         let uIdx = users.findIndex(x => x.id === currentUser.id);
-        if(uIdx > -1) { users[uIdx].theme = currentUser.theme; DB.set('users', users); DB.setObj('currentUser', currentUser); }
+        if(uIdx > -1) { 
+            users[uIdx].theme = currentUser.theme; 
+            DB.set('users', users); 
+            DB.setObj('currentUser', currentUser); 
+        }
     }
-    closeAllDropdowns();
-}
-
-// 🌐 Language Fixed
-function openLanguage() { openModal('language-modal'); }
+                              }
