@@ -17,9 +17,7 @@
 <header class="top-header hidden" id="top-header">
     <div class="header-logo">🔥 SNAPBOOK</div>
     <div class="header-icons">
-        <div class="icon-btn" onclick="withLoading(() => navTo('notifications-screen'))">
-            🔔 <div id="notif-badge" class="notif-badge hidden">0</div>
-        </div>
+        <div class="icon-btn" onclick="withLoading(() => navTo('notifications-screen'))">🔔 <div id="notif-badge" class="notif-badge hidden">0</div></div>
         <div class="dropdown">
             <div class="icon-btn" style="background: var(--primary); color: white;" onclick="toggleDropdown('create-menu', event)">+</div>
             <div id="create-menu" class="dropdown-content" style="right: 0; top: 45px;">
@@ -37,11 +35,70 @@
                 <div class="menu-item" onclick="openLanguage()">🌐 Language</div>
                 <div class="menu-item" onclick="toggleTheme()">🌗 Toggle Theme</div>
                 <div class="menu-item" onclick="openModal('edit-profile-modal')">✏️ Edit Profile</div>
-                <div class="menu-item" onclick="openModal('password-modal')">🔑 Change Password</div>
                 <div class="menu-item" style="color: var(--fb-red);" onclick="logout()">🚪 Logout</div>
             </div>
         </div>
     </div>
+</header>
+
+<!-- SCREENS -->
+<div id="auth-screen" class="screen" style="padding-top: 0; display: flex; align-items: center; justify-content: center;">
+    <div id="login-box" class="multi-step-form">
+        <h1 style="color: var(--primary); font-size: 38px; font-weight: 900; margin-bottom: 5px;">SNAPBOOK <sup style="font-size:14px; color:var(--gold);">PRO</sup></h1>
+        <p style="color: var(--text-muted); margin-bottom: 25px;">Connect, Share, Discover.</p>
+        <input type="text" id="log-username" placeholder="Phone or Email">
+        <input type="password" id="log-password" placeholder="Password">
+        <button class="btn" onclick="withLoading(() => handleLogin())">Log In</button>
+        <hr style="border: 0; height: 1px; background: var(--border); margin: 20px 0;">
+        <button class="btn btn-outline btn-success" onclick="startSignup()">Create New Account</button>
+    </div>
+    <div id="signup-box" class="multi-step-form hidden">
+        <h3 style="margin-bottom: 15px; color: var(--primary);" id="reg-title">Sign Up - Step 1</h3>
+        <div id="reg-step-1"><input type="text" id="reg-fn" placeholder="First Name"><button class="btn" onclick="nextRegStep(2)">Next</button></div>
+        <div id="reg-step-2" class="hidden"><input type="text" id="reg-ln" placeholder="Last Name"><button class="btn" onclick="nextRegStep(3)">Next</button></div>
+        <div id="reg-step-3" class="hidden"><select id="reg-gender"><option value="">Select Gender</option><option value="Male">Male</option><option value="Female">Female</option></select><button class="btn" onclick="nextRegStep(4)">Next</button></div>
+        <div id="reg-step-4" class="hidden"><input type="date" id="reg-dob"><button class="btn" onclick="nextRegStep(5)">Next</button></div>
+        <div id="reg-step-5" class="hidden">
+            <select id="reg-contact-type" onchange="toggleContactType()"><option value="email">Email</option><option value="phone">Phone</option></select>
+            <input type="text" id="reg-contact" placeholder="Email Address">
+            <input type="password" id="reg-password-new" placeholder="Create Password">
+            <button class="btn" onclick="withLoading(() => submitSignup())">Create Account</button>
+        </div>
+        <div style="color: var(--text-muted); cursor:pointer; font-weight:bold; margin-top:20px;" onclick="cancelSignup()">Cancel</div>
+    </div>
+</div>
+
+<div id="suspended-screen" class="screen hidden"><div style="text-align: center; margin-top: 50px;"><div id="appeal-status-area"></div><button class="btn btn-outline" style="margin-top:20px;" onclick="logout()">Logout</button></div></div>
+<div id="feed-screen" class="screen hidden"><div class="feed-container" id="main-feed"></div></div>
+<div id="search-screen" class="screen hidden"><div class="feed-container"><input type="text" id="search-input" placeholder="Search..." onkeyup="performSearch()"><div id="search-results"></div><div id="discover-area"><div id="suggested-users"></div><div id="trending-posts" class="profile-grid"></div></div></div></div>
+<div id="profile-screen" class="screen hidden"><div style="max-width: 600px; margin: 0 auto; background: var(--bg-color); min-height:100vh;"><div style="height: 180px; background: var(--secondary); position: relative;"><img id="profile-cover" src="" style="width:100%; height:100%; object-fit:cover; display:none;"><label for="upload-cover" id="cover-edit-btn" style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.6); color:#fff; padding:6px 12px; border-radius:6px; cursor:pointer;">Edit Cover</label><input type="file" id="upload-cover" accept="image/*" class="hidden" onchange="triggerUploadWrapper('cover', this)"></div><div style="padding: 0 15px; position: relative; margin-top: -50px;"><img id="profile-pic-large" src="" style="width:100px;height:100px;border-radius:50%;border:4px solid var(--bg-color);object-fit:cover;"><label for="upload-pfp" id="pfp-edit-btn" style="position:absolute; left:80px; bottom:0; background:var(--secondary); width:32px; height:32px; border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer;">📷</label><input type="file" id="upload-pfp" accept="image/*" class="hidden" onchange="triggerUploadWrapper('pfp', this)"><h2 id="profile-name" style="margin-top: 10px;">Name</h2><p id="profile-username" style="color: var(--text-muted);">@username</p><p id="profile-bio" style="margin-bottom: 10px;"></p><div id="profile-follow-btn-container"></div><div class="profile-stats"><div class="stat-box" onclick="openModal('follower-modal'); renderFollowersList()"><strong id="stat-followers">0</strong><span>Followers</span></div><div class="stat-box" onclick="openModal('following-modal'); renderFollowingList()"><strong id="stat-following">0</strong><span>Following</span></div><div class="stat-box"><strong id="stat-posts">0</strong><span>Posts</span></div></div></div><div id="profile-feed" class="profile-grid"></div></div></div>
+<div id="messages-screen" class="screen hidden"><div style="max-width:600px; margin:0 auto; padding:15px;"><h3>Chats</h3><div id="messages-list"></div></div></div>
+<div id="notifications-screen" class="screen hidden"><div style="max-width:600px; margin:0 auto; padding:15px;"><h3>Notifications <button class="btn-small btn-outline" style="float:right;" onclick="markAllNotifsRead()">Clear</button></h3><div id="notifications-list"></div></div></div>
+<div id="bookmarks-screen" class="screen hidden"><div style="max-width:600px; margin:0 auto; padding:15px;"><h3>Saved Posts</h3><div id="bookmarks-list"></div></div></div>
+
+<!-- MODALS -->
+<div id="full-post-modal" class="modal closed"><div class="modal-header"><h3>Post</h3><button class="btn-small" onclick="closeModal('full-post-modal')">Back</button></div><div class="modal-body" id="full-post-area"></div></div>
+<div id="edit-profile-modal" class="modal closed"><div class="modal-header"><h3>Edit Profile</h3><button class="btn-small" onclick="closeModal('edit-profile-modal')">Close</button></div><div class="modal-body"><input type="text" id="ep-name" placeholder="Name"><textarea id="ep-bio" rows="3" placeholder="Bio"></textarea><button class="btn btn-primary" onclick="saveProfileEdit()">Save</button></div></div>
+<div id="language-modal" class="modal closed"><div class="modal-header"><h3>Language</h3><button class="btn-small" onclick="closeModal('language-modal')">Close</button></div><div class="modal-body"><div id="google_translate_element"></div></div></div>
+<div id="monetization-modal" class="modal closed"><div class="modal-header"><h3>Monetization</h3><button class="btn-small" onclick="closeModal('monetization-modal')">Close</button></div><div class="modal-body"><h2 id="monetization-earnings" style="text-align:center; color:green;">$0.00</h2><button class="btn btn-success" onclick="requestPayout()">Request Payout</button></div></div>
+<div id="verification-modal" class="modal closed"><div class="modal-header"><h3>Verify</h3><button class="btn-small" onclick="closeModal('verification-modal')">Close</button></div><div class="modal-body" id="verify-body"></div></div>
+<div id="upload-media-modal" class="modal closed"><div class="modal-header"><h3 id="upload-modal-title">Create Post</h3><button class="btn-small" onclick="closeModal('upload-media-modal')">Close</button></div><div class="modal-body"><input type="hidden" id="up-type-hidden"><div id="up-file-name"></div><textarea id="up-text" placeholder="Description..."></textarea><button class="btn" onclick="withLoading(() => processUpload())" style="margin-top:20px;">Publish</button></div></div>
+<div id="comments-modal" class="modal closed"><div class="modal-header"><h3>Comments</h3><button class="btn-small" onclick="closeModal('comments-modal')">Close</button></div><div class="modal-body"><div id="comments-list" style="margin-bottom:60px;"></div><div style="position:absolute; bottom:0; width:100%; display:flex; gap:10px;"><input type="text" id="comment-input"><button class="btn" onclick="postComment()">Send</button></div></div></div>
+<div id="chat-modal" class="modal closed"><div class="modal-header"><h3 id="chat-title">Chat</h3><button class="btn-small" onclick="closeModal('chat-modal')">Back</button></div><div class="modal-body" style="display:flex; flex-direction:column;"><div id="chat-history" class="chat-box"></div><div class="chat-input-area"><input type="text" id="chat-input"><button class="btn" onclick="sendMessage()">Send</button></div></div></div>
+<div id="follower-modal" class="modal closed"><div class="modal-header"><h3>Followers</h3><button class="btn-small" onclick="closeModal('follower-modal')">Close</button></div><div class="modal-body" id="follower-list-area"></div></div>
+<div id="following-modal" class="modal closed"><div class="modal-header"><h3>Following</h3><button class="btn-small" onclick="closeModal('following-modal')">Close</button></div><div class="modal-body" id="following-list-area"></div></div>
+
+<!-- BOTTOM NAV -->
+<nav id="bottom-bar" class="bottom-nav hidden">
+    <div class="nav-item active" onclick="withLoading(() => navTo('feed-screen', this))">🏠 <br>Home</div>
+    <div class="nav-item" onclick="withLoading(() => { navTo('search-screen', this); loadDiscoverData(); })">🔍 <br>Discover</div>
+    <div class="nav-item" onclick="withLoading(() => navTo('messages-screen', this))">💬 <br>Chat</div>
+    <div class="nav-item" onclick="withLoading(() => viewProfile(currentUser.id, this))">👤 <br>Profile</div>
+</nav>
+
+<script src="app.js"></script>
+</body>
+    </html>    </div>
 </header>
 
 <!-- AUTH SCREEN -->
