@@ -1,0 +1,30 @@
+/* === MODERN THEME VARIABLES === */
+:root {
+    --bg-color: #f3f4f6;
+    --text-color: #111827;
+    --text-muted: #6b7280;
+    --primary: #3b82f6;       
+    --primary-hover: #2563eb;
+    --secondary: #e5e7eb;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --border: #d1d5db;
+    --radius: 12px;
+    --fb-red: #ef4444;
+    --gold: #f59e0b;
+    --success: #10b981;
+    --purple: #8b5cf6;
+}
+/* Dark Mode Variables */
+body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #e5e7eb;
+    --text-muted: #9ca3af;
+    --primary: #3b82f6;
+    --secondary: #374151;
+    --glass-bg: rgba(31, 41, 55, 0.85);
+    --border: #374151;
+}
+
+/* ... (আগের ফাইলের সম্পূর্ণ CSS কোড এখানে পেস্ট করুন) ... */
+
+.multi-step-form { width: 90%; max-width: 400px; text-align: center; background: var(--glass-bg); backdrop-filter: blur(15px); padding: 30px 20px; border-radius: var(--radius); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
