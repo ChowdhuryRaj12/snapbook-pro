@@ -2,39 +2,26 @@ window.onload = function() {
     if (!localStorage.getItem(`${DB_PREFIX}users`)) DB.set('users', []);
     if (!localStorage.getItem(`${DB_PREFIX}posts`)) DB.set('posts', []);
     
+    // অ্যাপ লোড হওয়ার সাথে সাথে সব স্ক্রিন হাইড করে দাও
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+
     if (currentUser) {
-        document.getElementById('auth-screen').classList.add('hidden');
+        // যদি লগইন করা থাকে, তাহলে Home/Feed দেখাবে
         document.getElementById('top-header').classList.remove('hidden');
         document.getElementById('bottom-bar').classList.remove('hidden');
         if(currentUser.theme === 'dark') document.body.classList.add('dark-mode');
-        navTo('feed-screen');
+        
+        navTo('feed-screen'); // ফিড স্ক্রিন ওপেন হবে
+    } else {
+        // লগইন করা না থাকলে শুধু Auth (লগইন) স্ক্রিন দেখাবে
+        document.getElementById('top-header').classList.add('hidden');
+        document.getElementById('bottom-bar').classList.add('hidden');
+        
+        navTo('auth-screen'); // লগইন স্ক্রিন ওপেন হবে
     }
 };
 
-// 🖼️ PFP and Cover Upload Fixed
-function resizeImage(file) {
-    return new Promise(resolve => {
-        let reader = new FileReader();
-        reader.onload = e => {
-            let img = new Image();
-            img.onload = () => {
-                let canvas = document.createElement('canvas');
-                let w = img.width, h = img.height;
-                if(w > 800) { h *= 800/w; w = 800; }
-                canvas.width = w; canvas.height = h;
-                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                resolve(canvas.toDataURL('image/jpeg', 0.8));
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
-}
-
-function triggerUploadWrapper(type, el) {
-    if(!el.files[0]) return;
-    withLoading(async () => {
-        let base64Image = await resizeImage(el.files[0]);
+// আপনার main.js এর বাকি কোড (ছবি আপলোড ইত্যাদি) আগের মতই থাকবে...        let base64Image = await resizeImage(el.files[0]);
         let users = DB.get('users');
         let uIdx = users.findIndex(u => u.id === currentUser.id);
         
