@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SNAPBOOK PRO</title>
-    <link rel="stylesheet" href="style.css">
+    
     <!-- EmailJS Script -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
@@ -12,6 +12,69 @@
           emailjs.init("lpV9dn2wXV1H-6X8j"); // আপনার Public Key
        })();
     </script>
+
+    <style>
+        :root {
+            --primary: #1877F2;
+            --bg-color: #f0f2f5;
+            --text-color: #050505;
+        }
+        body.dark-mode {
+            --bg-color: #18191a;
+            --text-color: #e4e6eb;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background: var(--bg-color); color: var(--text-color); padding-bottom: 60px; transition: background 0.3s, color 0.3s; }
+
+        /* Core Logic */
+        .hidden { display: none !important; }
+        .screen { display: none; width: 100%; min-height: 100vh; }
+        .screen:not(.hidden) { display: block; }
+        .flex-center { display: flex !important; align-items: center; justify-content: center; padding-top: 0; }
+        .modal.closed { display: none !important; }
+
+        /* UI Styles */
+        .top-header { display: flex; justify-content: space-between; padding: 15px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        body.dark-mode .top-header { background: #242526; }
+        .header-logo { font-weight: bold; font-size: 18px; color: var(--primary); }
+        .header-icons { display: flex; gap: 15px; }
+        .icon-btn { cursor: pointer; font-size: 20px; }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #fff; padding: 10px; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); z-index: 100; }
+        body.dark-mode .bottom-nav { background: #242526; }
+        .nav-item { text-align: center; cursor: pointer; color: gray; font-size: 14px; }
+        .nav-item.active { color: var(--primary); font-weight: bold; }
+
+        .multi-step-form { background: #fff; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; margin: auto; }
+        body.dark-mode .multi-step-form { background: #242526; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; outline: none; }
+        body.dark-mode input { background: #3a3b3c; border: none; color: white; }
+        
+        .btn { width: 100%; padding: 10px; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 5px; }
+        .btn-outline { background: transparent; border: 2px solid #28a745; color: #28a745; margin-top: 15px; }
+        .btn-success { background: #28a745; }
+
+        .dropdown { position: relative; }
+        .dropdown-content { display: none; position: absolute; right: 0; top: 30px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 5px; padding: 10px; z-index: 200; min-width: 150px; }
+        body.dark-mode .dropdown-content { background: #3a3b3c; }
+        .show-dropdown { display: block; }
+        .menu-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
+        body.dark-mode .menu-item { border-bottom: 1px solid #555; }
+        .menu-item:last-child { border-bottom: none; }
+
+        /* Modal Styles */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-body { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; }
+        body.dark-mode .modal-body { background: #242526; }
+
+        /* Loader & Toast */
+        #loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        body.dark-mode #loader-overlay { background: rgba(0,0,0,0.8); }
+        .spinner { border: 4px solid #ccc; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 20px; z-index: 9999; font-size: 14px; white-space: nowrap; }
+    </style>
 </head>
 <body>
 
@@ -46,7 +109,7 @@
             <input type="text" id="log-username" placeholder="Email Address">
             <input type="password" id="log-password" placeholder="Password">
             <button class="btn" onclick="withLoading(() => handleLogin())">Log In</button>
-            <hr style="margin: 20px 0;">
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
             <button class="btn btn-outline" onclick="startSignup()">Create New Account</button>
         </div>
 
@@ -83,18 +146,22 @@
     </div>
 
     <!-- MAIN SCREENS -->
-    <div id="feed-screen" class="screen hidden"><div class="feed-container" id="main-feed"></div></div>
+    <div id="feed-screen" class="screen hidden">
+        <div class="feed-container" id="main-feed" style="max-width: 600px; margin: 0 auto; padding: 15px;">
+            <!-- Posts will render here -->
+        </div>
+    </div>
     
     <div id="profile-screen" class="screen hidden">
-        <div style="max-width: 600px; margin: 0 auto; background: var(--bg-color); min-height:100vh;">
+        <div style="max-width: 600px; margin: 0 auto; min-height:100vh;">
             <div style="height: 180px; background: gray; position: relative;">
                 <img id="profile-cover" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
                 <label for="upload-cover" style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.6); color:#fff; padding:6px 12px; border-radius:6px; cursor:pointer;">📷 Edit Cover</label>
                 <input type="file" id="upload-cover" accept="image/*" class="hidden" onchange="triggerUploadWrapper('cover', this)">
             </div>
             <div style="padding: 0 15px; position: relative; margin-top: -50px;">
-                <img id="profile-pic-large" src="" style="width:100px;height:100px;border-radius:50%;border:4px solid white;object-fit:cover;background:lightgray;">
-                <label for="upload-pfp" style="position:absolute; left:80px; bottom:0; background:white; width:32px; height:32px; border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer; border:1px solid gray;">📷</label>
+                <img id="profile-pic-large" src="" style="width:100px;height:100px;border-radius:50%;border:4px solid white;object-fit:cover;background:lightgray; position: relative; z-index: 2;">
+                <label for="upload-pfp" style="position:absolute; left:80px; bottom:0; background:white; width:32px; height:32px; border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer; border:1px solid gray; z-index: 3;">📷</label>
                 <input type="file" id="upload-pfp" accept="image/*" class="hidden" onchange="triggerUploadWrapper('pfp', this)">
                 <h2 id="profile-name" style="margin-top: 10px;">Name</h2>
                 <p id="profile-email" style="color: gray; margin-bottom: 5px;">@email</p>
@@ -103,13 +170,24 @@
     </div>
 
     <div id="bookmarks-screen" class="screen hidden">
-        <div style="max-width:600px; margin:0 auto; padding:15px;"><h3>Saved Posts</h3><div id="bookmarks-list"></div></div>
+        <div style="max-width:600px; margin:0 auto; padding:15px;">
+            <h3>Saved Posts</h3>
+            <div id="bookmarks-list" style="margin-top: 15px;"></div>
+        </div>
     </div>
 
     <!-- MODALS -->
-    <div id="monetization-modal" class="modal closed"><div class="modal-body"><h3>Monetization</h3><h2 id="monetization-earnings" style="color:green;">$0.00</h2><button class="btn btn-success" onclick="closeModal('monetization-modal')">Close</button></div></div>
+    <div id="monetization-modal" class="modal closed">
+        <div class="modal-body">
+            <h3>Monetization</h3>
+            <h2 id="monetization-earnings" style="color:green; margin: 15px 0;">$0.00</h2>
+            <button class="btn btn-success" onclick="closeModal('monetization-modal')">Close</button>
+        </div>
+    </div>
     
-    <div id="verification-modal" class="modal closed"><div class="modal-body" id="verify-body"></div></div>
+    <div id="verification-modal" class="modal closed">
+        <div class="modal-body" id="verify-body"></div>
+    </div>
 
     <!-- BOTTOM NAV -->
     <nav id="bottom-bar" class="bottom-nav hidden">
@@ -117,10 +195,247 @@
         <div class="nav-item" onclick="viewProfile(currentUser.id, this)">👤 <br>Profile</div>
     </nav>
 
-    <!-- JS Files in Order -->
-    <script src="db.js"></script>
-    <script src="ui.js"></script>
-    <script src="auth.js"></script>
-    <script src="main.js"></script>
+    <!-- Unified JS Logic -->
+    <script>
+        const DB_PREFIX = 'snap_pro_v9_';
+
+        const DB = {
+            get: (k) => JSON.parse(localStorage.getItem(`${DB_PREFIX}${k}`)) || [],
+            set: (k, v) => localStorage.setItem(`${DB_PREFIX}${k}`, JSON.stringify(v)),
+            getObj: (k) => JSON.parse(localStorage.getItem(`${DB_PREFIX}${k}`)) || null,
+            setObj: (k, v) => localStorage.setItem(`${DB_PREFIX}${k}`, JSON.stringify(v)),
+            remove: (k) => localStorage.removeItem(`${DB_PREFIX}${k}`)
+        };
+
+        let currentUser = DB.getObj('currentUser');
+        const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+        // Initialize Database Arrays if empty
+        if (!localStorage.getItem(`${DB_PREFIX}users`)) DB.set('users', []);
+        if (!localStorage.getItem(`${DB_PREFIX}posts`)) DB.set('posts', []);
+
+        let generatedOTP = null;
+        let pendingSignupData = null;
+
+        window.onload = function() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+
+            if (currentUser) {
+                document.getElementById('top-header').classList.remove('hidden');
+                document.getElementById('bottom-bar').classList.remove('hidden');
+                if(currentUser.theme === 'dark') document.body.classList.add('dark-mode');
+                navTo('feed-screen'); 
+            } else {
+                document.getElementById('top-header').classList.add('hidden');
+                document.getElementById('bottom-bar').classList.add('hidden');
+                navTo('auth-screen'); 
+            }
+        };
+
+        /* Navigation & UI Logic */
+        function showToast(msg) { 
+            let c = document.getElementById('toast-container'); 
+            let t = document.createElement('div'); 
+            t.className='toast'; t.innerText=msg; 
+            c.appendChild(t); 
+            setTimeout(()=>t.remove(), 3000); 
+        }
+
+        function withLoading(cb) { 
+            document.getElementById('loader-overlay').classList.remove('hidden'); 
+            setTimeout(()=>{ 
+                document.getElementById('loader-overlay').classList.add('hidden'); 
+                cb(); 
+            }, 500); 
+        }
+
+        function navTo(screenId, navEl = null) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+            document.getElementById(screenId).classList.remove('hidden');
+            if (navEl) { 
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
+                navEl.classList.add('active'); 
+            }
+            closeAllDropdowns();
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('closed'); closeAllDropdowns(); }
+        function closeModal(id) { document.getElementById(id).classList.add('closed'); }
+        function toggleDropdown(id, e) { e.stopPropagation(); closeAllDropdowns(); document.getElementById(id).classList.add('show-dropdown'); }
+        function closeAllDropdowns() { document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show-dropdown')); }
+        document.body.addEventListener('click', closeAllDropdowns);
+
+        /* Auth Logic */
+        function startSignup() { 
+            document.getElementById('login-box').classList.add('hidden'); 
+            document.getElementById('signup-box').classList.remove('hidden'); 
+            nextRegStep(1); 
+        }
+
+        function cancelSignup() { 
+            document.getElementById('signup-box').classList.add('hidden'); 
+            document.getElementById('login-box').classList.remove('hidden'); 
+        }
+
+        function nextRegStep(step) { 
+            for(let i=1; i<=4; i++) {
+                let stepEl = document.getElementById('reg-step-'+i);
+                if(stepEl) stepEl.classList.add('hidden'); 
+            }
+            let targetStep = document.getElementById('reg-step-'+step);
+            if(targetStep) targetStep.classList.remove('hidden'); 
+            document.getElementById('reg-title').innerText = `Sign Up - Step ${step}`;
+        }
+
+        function sendOTP() {
+            let fn = document.getElementById('reg-fn').value.trim();
+            let ln = document.getElementById('reg-ln').value.trim();
+            let email = document.getElementById('reg-contact').value.trim();
+            let pass = document.getElementById('reg-password-new').value;
+
+            if (!fn || !ln || !email || !pass) return showToast("Please fill all details!");
+            if (!email.includes('@')) return showToast("Enter a valid email address!");
+
+            let users = DB.get('users');
+            if (users.find(u => u.contact === email)) {
+                return showToast("Account already exists with this email!");
+            }
+
+            pendingSignupData = { name: fn + " " + ln, contact: email, pass: pass };
+            generatedOTP = Math.floor(10000 + Math.random() * 90000).toString();
+
+            let templateParams = { to_name: fn, to_email: email, otp: generatedOTP };
+
+            emailjs.send('service_20bpfss', 'template_8yqzeol', templateParams)
+                .then(function(response) {
+                    showToast("OTP sent successfully to your email!");
+                    nextRegStep(4);
+                }, function(error) {
+                    showToast("Failed to send OTP. Check email address.");
+                    console.log("EmailJS Error:", error);
+                });
+        }
+
+        function verifyOTPAndSignup() {
+            let userOTP = document.getElementById('reg-otp-input').value.trim();
+            
+            if (!userOTP) return showToast("Please enter the OTP!");
+            if (userOTP !== generatedOTP) return showToast("Invalid OTP Code! Try again.");
+
+            let users = DB.get('users');
+            let newUser = { 
+                id: Date.now(), name: pendingSignupData.name, contact: pendingSignupData.contact, 
+                password: pendingSignupData.pass, profilePic: defaultAvatar, coverPhoto: "", 
+                bookmarks: [], earnings: 0, theme: 'light'
+            };
+            
+            users.push(newUser);
+            DB.set('users', users);
+            DB.setObj('currentUser', newUser);
+            
+            showToast("Account Created Successfully!");
+            setTimeout(() => { location.reload(); }, 1000);
+        }
+
+        function handleLogin() {
+            let contact = document.getElementById('log-username').value.trim();
+            let pass = document.getElementById('log-password').value;
+            
+            if (!contact || !pass) return showToast("Enter email and password!");
+            
+            let user = DB.get('users').find(u => u.contact === contact && u.password === pass);
+            if (user) {
+                DB.setObj('currentUser', user);
+                showToast("Login Successful!");
+                setTimeout(() => { location.reload(); }, 500);
+            } else {
+                showToast("Invalid Email or Password!");
+            }
+        }
+
+        function logout() { 
+            DB.remove('currentUser'); 
+            location.reload(); 
+        }
+
+        /* Other Features */
+        function viewProfile(userId, navEl=null) {
+            let u = DB.get('users').find(x => x.id === userId);
+            if(!u) return;
+            
+            document.getElementById('profile-name').innerText = u.name;
+            document.getElementById('profile-email').innerText = u.contact;
+            document.getElementById('profile-pic-large').src = u.profilePic || defaultAvatar;
+            
+            let coverEl = document.getElementById('profile-cover');
+            if(u.coverPhoto) { 
+                coverEl.src = u.coverPhoto; 
+                coverEl.style.display = 'block'; 
+            } else { 
+                coverEl.style.display = 'none'; 
+            }
+            
+            navTo('profile-screen', navEl);
+        }
+
+        function triggerUploadWrapper(type, el) {
+            if (!el.files || !el.files[0]) return;
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let base64Image = e.target.result;
+                let users = DB.get('users');
+                let uIdx = users.findIndex(u => u.id === currentUser.id);
+                
+                if(type === 'pfp') users[uIdx].profilePic = base64Image;
+                if(type === 'cover') users[uIdx].coverPhoto = base64Image;
+                
+                DB.set('users', users);
+                currentUser = users[uIdx];
+                DB.setObj('currentUser', currentUser);
+                
+                showToast("Photo Updated Successfully!");
+                viewProfile(currentUser.id);
+            };
+            reader.readAsDataURL(el.files[0]);
+        }
+
+        function openMonetization() {
+            closeAllDropdowns();
+            document.getElementById('monetization-earnings').innerText = "$" + (currentUser.earnings || 0).toFixed(2);
+            openModal('monetization-modal');
+        }
+
+        function openVerification() {
+            closeAllDropdowns();
+            document.getElementById('verify-body').innerHTML = `
+                <h3>Get Verified</h3>
+                <input type="text" placeholder="Full Legal Name" style="width:100%; margin:10px 0; padding:10px;">
+                <input type="text" placeholder="Country" style="width:100%; margin:10px 0; padding:10px;">
+                <button class="btn" onclick="showToast('Verification Request Submitted!'); closeModal('verification-modal');">Submit Identity</button>
+            `;
+            openModal('verification-modal');
+        }
+
+        function renderBookmarks() {
+            navTo('bookmarks-screen');
+            let posts = DB.get('posts').filter(p => currentUser.bookmarks && currentUser.bookmarks.includes(p.id));
+            let html = posts.map(p => `<div style="padding:15px; background:var(--bg-color); margin-bottom:10px; border-radius:12px; border:1px solid #ccc;">${p.text}</div>`).join('');
+            document.getElementById('bookmarks-list').innerHTML = html || "<p style='text-align:center; color:gray; margin-top:20px;'>No saved posts yet.</p>";
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            if(currentUser) {
+                currentUser.theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+                let users = DB.get('users');
+                let uIdx = users.findIndex(x => x.id === currentUser.id);
+                if(uIdx > -1) { 
+                    users[uIdx].theme = currentUser.theme; 
+                    DB.set('users', users); 
+                    DB.setObj('currentUser', currentUser); 
+                }
+            }
+        }
+    </script>
 </body>
-</html>
+    </html>
