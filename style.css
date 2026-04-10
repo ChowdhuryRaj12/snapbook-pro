@@ -1,48 +1,66 @@
-:root {
-    --primary: #1877F2;
-    --bg-color: #f0f2f5;
-    --text-color: #050505;
-}
-body.dark-mode {
-    --bg-color: #18191a;
-    --text-color: #e4e6eb;
-}
+:root { --primary: #1877F2; --bg-color: #f0f2f5; --text-color: #050505; --card-bg: #ffffff; }
+body.dark-mode { --bg-color: #18191a; --text-color: #e4e6eb; --card-bg: #242526; }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-body { background: var(--bg-color); color: var(--text-color); padding-bottom: 60px; }
+body { background: var(--bg-color); color: var(--text-color); padding-bottom: 60px; transition: 0.3s; }
 
-/* 핵심 লজিক: এগুলো ছাড়া স্ক্রিন হাইড হবে না */
 .hidden { display: none !important; }
 .screen { display: none; width: 100%; min-height: 100vh; }
 .screen:not(.hidden) { display: block; }
-.flex-center { display: flex !important; align-items: center; justify-content: center; padding-top: 0; }
-.modal.closed { display: none !important; }
+.flex-center { display: flex !important; align-items: center; justify-content: center; min-height: 100vh; }
 
-/* UI Styles */
-.top-header { display: flex; justify-content: space-between; padding: 15px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-body.dark-mode .top-header { background: #242526; }
-.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #fff; padding: 10px; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); z-index: 100; }
-body.dark-mode .bottom-nav { background: #242526; }
-.nav-item { text-align: center; cursor: pointer; color: gray; }
+/* Header & Nav */
+.top-header { display: flex; justify-content: space-between; padding: 15px; background: var(--card-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;}
+.header-logo { font-weight: bold; font-size: 18px; color: var(--primary); }
+.header-icons { display: flex; gap: 15px; cursor: pointer; }
+.bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: var(--card-bg); padding: 10px; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); z-index: 100; }
+.nav-item { text-align: center; cursor: pointer; color: gray; font-size: 12px; }
 .nav-item.active { color: var(--primary); font-weight: bold; }
 
-.multi-step-form { background: #fff; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
-body.dark-mode .multi-step-form { background: #242526; }
-input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-.btn { width: 100%; padding: 10px; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-.btn-outline { background: transparent; border: 2px solid green; color: green; }
+/* Forms & Buttons */
+.form-box { background: var(--card-bg); padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.brand-title { color: var(--primary); font-size: 35px; font-weight: 900; }
+.brand-sub { color: gray; margin-bottom: 20px; }
+input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; background: var(--bg-color); color: var(--text-color); outline:none; }
+.btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 5px; }
+.btn-success { background: #28a745; }
+.cancel-text { color: gray; cursor: pointer; margin-top: 15px; font-weight: bold; }
 
-.dropdown-content { display: none; position: absolute; right: 10px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 5px; padding: 10px; z-index: 200; }
-body.dark-mode .dropdown-content { background: #3a3b3c; }
+/* Feed & Posts */
+.feed-container { max-width: 600px; margin: 0 auto; padding: 15px; }
+.create-post-box { background: var(--card-bg); padding: 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.post-card { background: var(--card-bg); margin-bottom: 15px; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 15px; }
+.post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-weight: bold; }
+.post-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.post-media { width: 100%; max-height: 400px; object-fit: cover; border-radius: 10px; margin-top: 10px; }
+.post-actions { display: flex; gap: 15px; margin-top: 10px; color: gray; cursor: pointer; font-weight: bold; }
+
+/* Reels */
+.reels-container { height: calc(100vh - 120px); overflow-y: scroll; scroll-snap-type: y mandatory; background: black; }
+.reel-item { height: 100%; width: 100%; scroll-snap-align: start; position: relative; display: flex; justify-content: center; align-items: center;}
+.reel-video { height: 100%; width: 100%; object-fit: cover; }
+.reels-header { position: absolute; top: 70px; right: 20px; z-index: 10; }
+.upload-btn { background: #333; color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 12px; }
+
+/* Chat */
+.user-list-item { display: flex; align-items: center; gap: 10px; padding: 15px; background: var(--card-bg); border-bottom: 1px solid #ccc; cursor: pointer; }
+.chat-box { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 200; display: flex; flex-direction: column; }
+.chat-header { padding: 15px; background: var(--card-bg); display: flex; gap: 15px; align-items: center; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+.msg-bubble { padding: 10px 15px; border-radius: 20px; max-width: 70%; word-wrap: break-word; }
+.msg-mine { background: var(--primary); color: white; align-self: flex-end; }
+.msg-theirs { background: #e4e6eb; color: black; align-self: flex-start; }
+.chat-input-area { display: flex; padding: 10px; background: var(--card-bg); gap: 10px; }
+
+/* Profile & Dashboard */
+.cover-photo { height: 200px; background: gray; position: relative; background-size: cover; background-position: center; }
+.avatar-wrapper { position: relative; margin-top: -50px; padding-left: 15px; }
+.avatar-large { width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--card-bg); object-fit: cover; background: white;}
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+.dash-card { background: var(--card-bg); padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+/* Dropdown & Utils */
+.dropdown-content { display: none; position: absolute; right: 10px; background: var(--card-bg); box-shadow: 0 4px 10px rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; }
 .show-dropdown { display: block; }
-.menu-item { padding: 10px; cursor: pointer; }
-
-/* Modal Styles */
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.modal-body { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; }
-body.dark-mode .modal-body { background: #242526; }
-
-/* Loader & Toast */
-#loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-.spinner { border: 4px solid #ccc; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 20px; z-index: 9999; }
+.menu-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; }
+#toast-container { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 9999; }
+.toast { background: #333; color: #fff; padding: 10px 20px; border-radius: 20px; margin-top: 5px; font-size: 14px; text-align: center;}
