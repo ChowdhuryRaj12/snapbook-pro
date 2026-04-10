@@ -94,3 +94,29 @@ input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; borde
 
 #toast-container { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 9999; }
 .toast { background: #333; color: #fff; padding: 10px 20px; border-radius: 20px; margin-top: 5px; font-size: 14px; text-align: center;}
+
+/* --- NEW ADVANCED FEATURES CSS --- */
+/* Stories */
+.story-container { display: flex; overflow-x: auto; gap: 15px; padding: 10px 0; margin-bottom: 15px; border-bottom: 1px solid #ccc; }
+.story-container::-webkit-scrollbar { display: none; }
+.story-item { width: 60px; height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; text-align: center;}
+.story-img { width: 50px; height: 50px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; cursor: pointer; }
+.create-story label { width: 50px; height: 50px; border-radius: 50%; background: #ccc; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; }
+
+/* Search Bar */
+.search-bar { position: relative; flex: 1; margin: 0 15px; }
+.search-bar input { width: 100%; padding: 8px 15px; border-radius: 20px; border: none; background: var(--bg-color); color: var(--text-color); outline: none;}
+.search-dropdown { position: absolute; top: 100%; left: 0; width: 100%; background: var(--card-bg); box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 10px; max-height: 200px; overflow-y: auto; z-index: 200; }
+
+/* Reactions & Badges */
+.verified-badge { color: #1da1f2; margin-left: 5px; font-size: 14px; }
+.reaction-box { position: relative; display: inline-block; }
+.reaction-emojis { display: none; position: absolute; bottom: 30px; left: 0; background: var(--card-bg); padding: 5px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); gap: 10px; }
+.reaction-box:hover .reaction-emojis { display: flex; animation: popUp 0.3s ease; }
+.react-icon { font-size: 20px; cursor: pointer; transition: transform 0.2s; }
+.react-icon:hover { transform: scale(1.3); }
+
+@keyframes popUp { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+/* Post Menu (Edit/Delete/Save) */
+.post-menu-btn { cursor: pointer; font-weight: bold; font-size: 18px; color: gray; }
