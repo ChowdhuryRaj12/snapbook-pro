@@ -5,44 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SNAPBOOK PRO</title>
     <link rel="stylesheet" href="style.css">
+    <!-- PWA Setup -->
+    <meta name="theme-color" content="#1877F2">
 </head>
 <body>
-
     <div id="loader-overlay" class="hidden"><div class="spinner"></div></div>
     <div id="toast-container"></div>
 
-    <!-- HEADER -->
+    <!-- HEADER (Added Search Bar) -->
     <header class="top-header hidden" id="top-header">
-        <div class="header-logo">🔥 SNAPBOOK <sup style="color:gold; font-size:10px;">PRO</sup></div>
+        <div class="header-logo">🔥 SNAPBOOK <sup style="color:gold;">PRO</sup></div>
+        <div class="search-bar">
+            <input type="text" id="global-search" placeholder="Search users, #hashtags..." oninput="liveSearch()">
+            <div id="search-results" class="search-dropdown hidden"></div>
+        </div>
         <div class="header-icons">
             <div class="icon-btn" onclick="navTo('dashboard-screen')">📊</div>
             <div class="dropdown">
                 <div class="icon-btn" onclick="toggleDropdown('side-menu', event)">☰</div>
                 <div id="side-menu" class="dropdown-content">
                     <div class="menu-item" onclick="toggleTheme()">🌗 Toggle Theme</div>
+                    <div class="menu-item" onclick="navTo('saved-screen')">📌 Saved Posts</div>
                     <div class="menu-item" style="color: red;" onclick="logout()">🚪 Logout</div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- AUTH SCREEN (No OTP) -->
+    <!-- AUTH SCREEN -->
     <div id="auth-screen" class="screen flex-center">
-        <!-- Login -->
+        <!-- Login Form... (Keep your existing Auth HTML here) -->
         <div id="login-box" class="form-box">
             <h1 class="brand-title">SNAPBOOK</h1>
-            <p class="brand-sub">Connect, Share, Discover.</p>
             <input type="email" id="log-email" placeholder="Email Address">
             <input type="password" id="log-password" placeholder="Password">
             <button class="btn" onclick="handleLogin()">Log In</button>
-            <hr class="divider">
-            <button class="btn btn-success" onclick="toggleAuth('signup-box')">Create New Account</button>
+            <p onclick="toggleAuth('signup-box')" style="color:var(--primary); cursor:pointer; margin-top:15px;">Create New Account</p>
         </div>
-
-        <!-- Signup -->
+        <!-- Signup Form... -->
         <div id="signup-box" class="form-box hidden">
-            <h2 style="color: var(--primary); margin-bottom: 15px;">Sign Up</h2>
+            <h2 style="color: var(--primary);">Sign Up</h2>
             <input type="text" id="reg-name" placeholder="Full Name">
+            <input type="text" id="reg-username" placeholder="@username">
             <input type="email" id="reg-email" placeholder="Email Address">
             <input type="password" id="reg-password" placeholder="Create Password">
             <button class="btn" onclick="handleSignup()">Sign Up</button>
@@ -50,107 +54,53 @@
         </div>
     </div>
 
-    <!-- 1. HOME SCREEN -->
+    <!-- 1. HOME SCREEN (Added Stories) -->
     <div id="home-screen" class="screen hidden">
         <div class="feed-container">
+            <!-- Story Section -->
+            <div class="story-container">
+                <div class="story-item create-story">
+                    <label for="story-upload">+</label>
+                    <input type="file" id="story-upload" accept="image/*,video/*" class="hidden" onchange="uploadStory(this)">
+                    <span>Add Story</span>
+                </div>
+                <div id="story-list" style="display:flex; gap:10px;"></div>
+            </div>
+
+            <!-- Create Post -->
             <div class="create-post-box">
-                <input type="text" id="post-text" placeholder="What's on your mind?">
+                <textarea id="post-text" placeholder="What's on your mind? Include #hashtags!"></textarea>
                 <input type="file" id="post-file" accept="image/*,video/*" class="hidden" onchange="previewUpload(this)">
                 <label for="post-file" class="upload-btn">📷 Photo/Video</label>
-                <button class="btn" onclick="createPost('home')">Post</button>
+                <button class="btn" onclick="createPost()">Post</button>
             </div>
+            
             <div id="home-feed"></div>
         </div>
     </div>
 
-    <!-- 2. REELS SCREEN -->
-    <div id="reels-screen" class="screen hidden">
-        <div class="reels-header">
-            <label for="reel-upload" class="upload-btn">➕ Upload Reel</label>
-            <input type="file" id="reel-upload" accept="video/*" class="hidden" onchange="uploadReel(this)">
-        </div>
-        <div id="reels-feed" class="reels-container"></div>
-    </div>
-
-    <!-- 3. MESSAGE SCREEN -->
-    <div id="message-screen" class="screen hidden">
-        <div class="chat-container">
-            <h3>Chats</h3>
-            <div id="user-list"></div>
-        </div>
-        <div id="chat-box" class="chat-box hidden">
-            <div class="chat-header">
-                <span onclick="closeChat()">⬅️ Back</span>
-                <b id="chat-user-name">User</b>
-            </div>
-            <div id="chat-messages" class="chat-messages"></div>
-            <div class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Type a message...">
-                <button onclick="sendMessage()">Send</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. NOTIFICATION SCREEN -->
-    <div id="notification-screen" class="screen hidden">
+    <!-- SAVED POSTS SCREEN -->
+    <div id="saved-screen" class="screen hidden">
         <div class="feed-container">
-            <h3>Notifications</h3>
-            <div id="notifications-list"></div>
+            <h3>📌 Saved Posts</h3>
+            <div id="saved-feed"></div>
         </div>
     </div>
 
-    <!-- 5. PROFILE SCREEN -->
-    <div id="profile-screen" class="screen hidden">
-        <div class="profile-container">
-            <div class="cover-photo" id="profile-cover">
-                <label for="upload-cover" class="edit-cover-btn">📷 Edit Cover</label>
-                <input type="file" id="upload-cover" accept="image/*" class="hidden" onchange="updateProfilePic('cover', this)">
-            </div>
-            <div class="profile-info">
-                <div class="avatar-wrapper">
-                    <img id="profile-pic" src="" class="avatar-large">
-                    <label for="upload-pfp" class="edit-pfp-btn">📷</label>
-                    <input type="file" id="upload-pfp" accept="image/*" class="hidden" onchange="updateProfilePic('pfp', this)">
-                </div>
-                <h2 id="prof-name">Name</h2>
-                <p id="prof-email">@email</p>
-            </div>
-            <div id="user-posts" style="margin-top:20px; padding: 10px;"></div>
-        </div>
-    </div>
-
-    <!-- 6. PROFESSIONAL DASHBOARD -->
-    <div id="dashboard-screen" class="screen hidden">
-        <div class="feed-container">
-            <h2>📊 Professional Dashboard</h2>
-            <div class="dash-grid">
-                <div class="dash-card"><h3>Total Views</h3><p id="dash-views">0</p></div>
-                <div class="dash-card"><h3>Total Likes</h3><p id="dash-likes">0</p></div>
-                <div class="dash-card"><h3>Followers</h3><p id="dash-followers">0</p></div>
-                <div class="dash-card" style="border: 2px solid green;">
-                    <h3 style="color:green;">Earnings</h3>
-                    <p id="dash-earnings" style="color:green;">$0.00</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Keep other screens (Reels, Messages, Profile, Dashboard) same as before... -->
 
     <!-- BOTTOM NAV -->
     <nav id="bottom-bar" class="bottom-nav hidden">
-        <div class="nav-item" onclick="navTo('home-screen', this)">🏠 <br>Home</div>
-        <div class="nav-item" onclick="navTo('reels-screen', this)">📱 <br>Reels</div>
-        <div class="nav-item" onclick="navTo('message-screen', this)">💬 <br>Message</div>
-        <div class="nav-item" onclick="navTo('notification-screen', this)">🔔 <br>Notify</div>
-        <div class="nav-item" onclick="navTo('profile-screen', this); loadProfile();">👤 <br>Profile</div>
+        <div class="nav-item" onclick="navTo('home-screen', this)">🏠</div>
+        <div class="nav-item" onclick="navTo('reels-screen', this)">📱</div>
+        <div class="nav-item" onclick="navTo('message-screen', this)">💬</div>
+        <div class="nav-item" onclick="navTo('notification-screen', this)">🔔</div>
+        <div class="nav-item" onclick="navTo('profile-screen', this); loadProfile();">👤</div>
     </nav>
 
     <!-- Scripts -->
     <script src="db.js"></script>
-    <script src="auth.js"></script>
     <script src="app.js"></script>
     <script src="feed.js"></script>
-    <script src="chat.js"></script>
-    <script src="profile.js"></script>
-    <script src="dashboard.js"></script>
 </body>
-                    </html>
+    </html>
